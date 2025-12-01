@@ -77,13 +77,6 @@ export function AIChat() {
 
   return (
     <>
-      {/* Credits Badge */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <div className="bg-blue-600/90 backdrop-blur-sm rounded-2xl shadow-xl px-8 py-4 text-sm text-white font-medium transition-all duration-300">
-          Credits to <span className="font-bold text-yellow-300">Jolo</span> ✨
-        </div>
-      </div>
-
       {/* Floating Chat Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button

@@ -1,26 +1,24 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
-
 interface ProgressBarProps {
   percentage: number
 }
 
 export function ProgressBar({ percentage }: ProgressBarProps) {
   return (
-    <Card className="p-6 mt-6">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-foreground">Overall Progress</span>
-          <span className="text-lg font-bold text-accent-foreground">{percentage}%</span>
+          <span className="text-sm font-medium text-gray-900 dark:text-white">Overall Progress</span>
+          <span className="text-lg font-bold text-gray-700 dark:text-gray-300">{percentage}%</span>
         </div>
-        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <div
-            className="h-full bg-accent-foreground rounded-full transition-all duration-300"
+            className="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-300"
             style={{ width: `${percentage}%` }}
           />
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

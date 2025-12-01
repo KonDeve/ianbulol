@@ -1,8 +1,9 @@
 "use client"
 
-import { Download } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
+import { Download, Eye } from "lucide-react"
 import type { ChecklistItem } from "@/types/checklist"
+import { CSVPreviewModal } from "@/components/csv-preview-modal"
 
 interface ExportButtonProps {
   checklist: Record<string, ChecklistItem[]>
@@ -11,6 +12,8 @@ interface ExportButtonProps {
 }
 
 export function ExportButton({ checklist, selectedPackage, gameName }: ExportButtonProps) {
+  const [showPreview, setShowPreview] = useState(false)
+
   const handleExport = () => {
     const timestamp = new Date().toLocaleString()
     const completedCount = Object.values(checklist)
@@ -43,9 +46,31 @@ export function ExportButton({ checklist, selectedPackage, gameName }: ExportBut
   }
 
   return (
-    <Button onClick={handleExport} variant="outline" size="lg">
-      <Download className="mr-2 h-4 w-4" />
-      Export
-    </Button>
+    <>
+      <div className="flex gap-2">
+        <button 
+          onClick={() => setShowPreview(true)} 
+          className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          <Eye className="mr-2 h-4 w-4" />
+          Preview
+        </button>
+        <button 
+          onClick={handleExport} 
+          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Export
+        </button>
+      </div>
+
+      <CSVPreviewModal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        checklist={checklist}
+        selectedPackage={selectedPackage}
+        gameName={gameName}
+      />
+    </>
   )
 }

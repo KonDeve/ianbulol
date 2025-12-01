@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { ClipboardCheck } from "lucide-react"
 import { ChecklistSection } from "@/components/checklist-section"
 import { ProgressBar } from "@/components/progress-bar"
 import { ExportButton } from "@/components/export-button"
 import { AddGameModal } from "@/components/add-game-modal"
+import { ConfirmModal } from "@/components/confirm-modal"
 import { GameTabs } from "@/components/game-tabs"
 import { useGames } from "@/hooks/use-games"
 import type { Game, ChecklistItem } from "@/types/checklist"
@@ -16,6 +18,11 @@ export default function Home() {
   const [activeGameId, setActiveGameId] = useState<string | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["ui-ux"]))
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; gameId: string | null; gameName: string }>({
+    isOpen: false,
+    gameId: null,
+    gameName: "",
+  })
 
   useEffect(() => {
     if (games.length > 0 && !activeGameId) {
@@ -45,14 +52,21 @@ export default function Home() {
     }
   }
 
-  const handleDeleteGame = async (gameId: string) => {
-    try {
-      await deleteGame(gameId)
-      if (activeGameId === gameId) {
-        setActiveGameId(games.length > 1 ? games.find((g) => g.id !== gameId)?.id || null : null)
+  const handleDeleteGame = (gameId: string) => {
+    const game = games.find((g) => g.id === gameId)
+    setDeleteConfirm({ isOpen: true, gameId, gameName: game?.name || "" })
+  }
+
+  const confirmDeleteGame = async () => {
+    if (deleteConfirm.gameId) {
+      try {
+        await deleteGame(deleteConfirm.gameId)
+        if (activeGameId === deleteConfirm.gameId) {
+          setActiveGameId(games.length > 1 ? games.find((g) => g.id !== deleteConfirm.gameId)?.id || null : null)
+        }
+      } catch (error) {
+        console.error("Failed to delete game:", error)
       }
-    } catch (error) {
-      console.error("Failed to delete game:", error)
     }
   }
 
@@ -92,12 +106,13 @@ export default function Home() {
     : 0
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="border-b border-border">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="px-8 py-6">
           <div className="flex items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">CHECKLIST NI KEVIN</h1>
+            <div className="flex items-center gap-3">
+              <ClipboardCheck className="w-8 h-8 text-blue-600" />
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Checklist</h1>
             </div>
             {activeGame && (
               <ExportButton
@@ -110,8 +125,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="border-b border-border">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="px-8">
           <GameTabs
             games={games}
             activeGameId={activeGameId}
@@ -123,18 +138,18 @@ export default function Home() {
       </div>
 
       {isLoading ? (
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 text-center">
-          <p className="text-muted-foreground">Loading games...</p>
+        <div className="px-8 py-16 text-center">
+          <p className="text-gray-500 dark:text-gray-400">Loading games...</p>
         </div>
       ) : activeGame ? (
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="px-8 py-8">
           <div className="grid gap-8 lg:grid-cols-4">
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="sticky top-8">
+              <div className="sticky top-8 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-foreground">Package Details</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Package Details</h3>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                     {gamePackages[activeGame.packageId as keyof typeof gamePackages]?.name}
                   </p>
                 </div>
@@ -158,11 +173,11 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 text-center">
-          <p className="text-muted-foreground mb-4">No games added yet</p>
+        <div className="px-8 py-16 text-center">
+          <p className="text-gray-500 dark:text-gray-400 mb-4">No games added yet</p>
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             Add Your First Game
           </button>
@@ -170,6 +185,17 @@ export default function Home() {
       )}
 
       <AddGameModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} onAddGame={handleAddGame} />
+
+      {/* Delete Game Confirmation Modal */}
+      <ConfirmModal
+        isOpen={deleteConfirm.isOpen}
+        onClose={() => setDeleteConfirm({ isOpen: false, gameId: null, gameName: "" })}
+        onConfirm={confirmDeleteGame}
+        title="Delete Game"
+        message={`Are you sure you want to delete "${deleteConfirm.gameName}"? This will also delete all checklist items associated with this game. This action cannot be undone.`}
+        confirmText="Delete Game"
+        confirmColor="red"
+      />
     </main>
   )
 }

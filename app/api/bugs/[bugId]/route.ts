@@ -1,0 +1,96 @@
+import { createClient } from "@/lib/server"
+import { NextResponse } from "next/server"
+
+// GET single bug
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ bugId: string }> }
+) {
+  try {
+    const { bugId } = await params
+    const supabase = await createClient()
+
+    const { data: bug, error } = await supabase
+      .from("bugs")
+      .select(`
+        *,
+        games (name)
+      `)
+      .eq("id", bugId)
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: "Bug not found" }, { status: 404 })
+    }
+
+    return NextResponse.json({
+      id: bug.id,
+      gameId: bug.game_id,
+      gameName: bug.games?.name || "Unknown Game",
+      description: bug.description,
+      screenshotUrl: bug.screenshot_url,
+      status: bug.status,
+      createdAt: bug.created_at,
+      updatedAt: bug.updated_at,
+    })
+  } catch (error) {
+    console.error("Error fetching bug:", error)
+    return NextResponse.json({ error: "Failed to fetch bug" }, { status: 500 })
+  }
+}
+
+// PATCH update bug
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ bugId: string }> }
+) {
+  try {
+    const { bugId } = await params
+    const supabase = await createClient()
+    const body = await request.json()
+
+    const updates: any = {
+      updated_at: Date.now(),
+    }
+
+    if (body.description !== undefined) updates.description = body.description
+    if (body.screenshotUrl !== undefined) updates.screenshot_url = body.screenshotUrl
+    if (body.status !== undefined) updates.status = body.status
+    if (body.gameId !== undefined) updates.game_id = body.gameId
+
+    const { error } = await supabase
+      .from("bugs")
+      .update(updates)
+      .eq("id", bugId)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error updating bug:", error)
+    return NextResponse.json({ error: "Failed to update bug" }, { status: 500 })
+  }
+}
+
+// DELETE bug
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ bugId: string }> }
+) {
+  try {
+    const { bugId } = await params
+    const supabase = await createClient()
+
+    const { error } = await supabase
+      .from("bugs")
+      .delete()
+      .eq("id", bugId)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Error deleting bug:", error)
+    return NextResponse.json({ error: "Failed to delete bug" }, { status: 500 })
+  }
+}
