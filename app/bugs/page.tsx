@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Bug, ClipboardCheck } from "lucide-react"
+import { Plus, Bug, ClipboardCheck, Share2, Check } from "lucide-react"
 import Link from "next/link"
 import { useBugs } from "@/hooks/use-bugs"
 import { BugsTable } from "@/components/bugs-table"
@@ -23,6 +23,7 @@ export default function BugsPage() {
     isOpen: false,
     bugId: null,
   })
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     // Fetch games for the dropdown
@@ -73,6 +74,17 @@ export default function BugsPage() {
     }
   }
 
+  const handleShareLink = async () => {
+    const viewUrl = `${window.location.origin}/bugs-view`
+    try {
+      await navigator.clipboard.writeText(viewUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error("Failed to copy link:", err)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
       {/* Header */}
@@ -96,6 +108,23 @@ export default function BugsPage() {
                 <ClipboardCheck className="w-4 h-4" />
                 Checklist
               </Link>
+              <button
+                onClick={handleShareLink}
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg transition-colors"
+                title="Copy view-only link"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4" />
+                    Share
+                  </>
+                )}
+              </button>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-sm"
