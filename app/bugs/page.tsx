@@ -1,15 +1,24 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Bug, ClipboardCheck, Share2, Check } from "lucide-react"
+import { Plus, Bug, ClipboardCheck, Share2 } from "lucide-react"
 import Link from "next/link"
 import { useBugs } from "@/hooks/use-bugs"
+import { encodeShareFilters } from "@/lib/share-utils"
 import { BugsTable } from "@/components/bugs-table"
 import { AddBugModal } from "@/components/add-bug-modal"
 import { EditBugModal } from "@/components/edit-bug-modal"
 import { ConfirmModal } from "@/components/confirm-modal"
+import { ShareModal } from "@/components/share-modal"
 import type { Game } from "@/types/checklist"
 import type { Bug as BugType, BugStatus } from "@/types/bugs"
+
+const statusLabels: Record<string, string> = {
+  open: "Open",
+  "in-progress": "In Progress",
+  done: "Done",
+  "wont-fix": "Won't Fix",
+}
 
 export default function BugsPage() {
   const { bugs, isLoading, addBug, updateBug, deleteBug } = useBugs()
@@ -23,7 +32,12 @@ export default function BugsPage() {
     isOpen: false,
     bugId: null,
   })
-  const [copied, setCopied] = useState(false)
+  const [shareModal, setShareModal] = useState<{ isOpen: boolean; url: string; filters: { gameName?: string; status?: string; search?: string } }>({
+    isOpen: false,
+    url: "",
+    filters: {},
+  })
+  const [currentFilters, setCurrentFilters] = useState({ gameId: "all", status: "all", search: "" })
 
   useEffect(() => {
     // Fetch games for the dropdown
@@ -74,15 +88,33 @@ export default function BugsPage() {
     }
   }
 
-  const handleShareLink = async () => {
-    const viewUrl = `${window.location.origin}/bugs-view`
-    try {
-      await navigator.clipboard.writeText(viewUrl)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error("Failed to copy link:", err)
-    }
+  const handleShareLink = () => {
+    const filters: { gameId?: string; status?: string; search?: string } = {}
+    if (currentFilters.gameId !== "all") filters.gameId = currentFilters.gameId
+    if (currentFilters.status !== "all") filters.status = currentFilters.status
+    if (currentFilters.search) filters.search = currentFilters.search
+    
+    const hasFilters = Object.keys(filters).length > 0
+    const encoded = hasFilters ? encodeShareFilters(filters) : ""
+    const viewUrl = `${window.location.origin}/bugs-view${encoded ? `?f=${encoded}` : ""}`
+    
+    // Get display names for filters
+    const gameName = currentFilters.gameId !== "all" 
+      ? games.find(g => g.id === currentFilters.gameId)?.name 
+      : undefined
+    const statusLabel = currentFilters.status !== "all" 
+      ? statusLabels[currentFilters.status] || currentFilters.status
+      : undefined
+    
+    setShareModal({
+      isOpen: true,
+      url: viewUrl,
+      filters: {
+        gameName,
+        status: statusLabel,
+        search: currentFilters.search || undefined,
+      },
+    })
   }
 
   return (
@@ -111,19 +143,10 @@ export default function BugsPage() {
               <button
                 onClick={handleShareLink}
                 className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg transition-colors"
-                title="Copy view-only link"
+                title="Share bugs view"
               >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-green-500">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="w-4 h-4" />
-                    Share
-                  </>
-                )}
+                <Share2 className="w-4 h-4" />
+                Share
               </button>
               <button
                 onClick={() => setIsModalOpen(true)}
@@ -153,6 +176,7 @@ export default function BugsPage() {
             onUpdateStatus={handleUpdateStatus}
             onDeleteBug={handleDeleteBug}
             onEditBug={handleEditBug}
+            onFiltersChange={setCurrentFilters}
           />
         )}
       </div>
@@ -183,6 +207,14 @@ export default function BugsPage() {
         message="Are you sure you want to delete this bug? This action cannot be undone."
         confirmText="Delete Bug"
         confirmColor="red"
+      />
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={shareModal.isOpen}
+        onClose={() => setShareModal({ isOpen: false, url: "", filters: {} })}
+        shareUrl={shareModal.url}
+        filters={shareModal.filters}
       />
     </div>
   )

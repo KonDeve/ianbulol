@@ -1,15 +1,25 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { Bug } from "lucide-react"
 import { BugsTableViewOnly } from "@/components/bugs-table-view-only"
+import { decodeShareFilters } from "@/lib/share-utils"
 import type { Game } from "@/types/checklist"
 import type { Bug as BugType } from "@/types/bugs"
 
-export default function BugsViewPage() {
+function BugsViewContent() {
+  const searchParams = useSearchParams()
   const [bugs, setBugs] = useState<BugType[]>([])
   const [games, setGames] = useState<Game[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  // Decode filters from URL param
+  const encodedFilters = searchParams.get("f") || ""
+  const decodedFilters = decodeShareFilters(encodedFilters)
+  const initialGameFilter = decodedFilters.gameId || "all"
+  const initialStatusFilter = decodedFilters.status || "all"
+  const initialSearch = decodedFilters.search || ""
 
   useEffect(() => {
     // Fetch bugs
@@ -66,9 +76,24 @@ export default function BugsViewPage() {
           <BugsTableViewOnly
             bugs={bugs}
             games={games.map(g => ({ id: g.id, name: g.name }))}
+            initialGameFilter={initialGameFilter}
+            initialStatusFilter={initialStatusFilter}
+            initialSearch={initialSearch}
           />
         )}
       </div>
     </div>
+  )
+}
+
+export default function BugsViewPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-red-200 dark:border-red-800 border-t-red-600 dark:border-t-red-400 rounded-full animate-spin"></div>
+      </div>
+    }>
+      <BugsViewContent />
+    </Suspense>
   )
 }

@@ -13,6 +13,9 @@ import type { Game, ChecklistItem } from "@/types/checklist"
 import { gamePackages } from "@/lib/game-packages"
 import { generateChecklist } from "@/lib/checklist-generator"
 
+// Fixed order for checklist sections
+const SECTION_ORDER = ["ui-ux", "menu-nav", "gameplay", "features", "audio", "performance"]
+
 export default function Home() {
   const { games, isLoading, addGame, deleteGame, updateGame, updateChecklist } = useGames()
   const [activeGameId, setActiveGameId] = useState<string | null>(null)
@@ -303,16 +306,21 @@ export default function Home() {
                 {Object.keys(activeGame.checklist).length} categories
               </span>
             </div>
-            {Object.entries(activeGame.checklist).map(([sectionId, items]) => (
-              <ChecklistSection
-                key={sectionId}
-                title={items[0]?.category || sectionId}
-                items={items}
-                isExpanded={expandedSections.has(sectionId)}
-                onToggleExpand={() => toggleSection(sectionId)}
-                onUpdateItem={(itemId, updates) => updateItem(sectionId, itemId, updates)}
-              />
-            ))}
+            {SECTION_ORDER
+              .filter(sectionId => activeGame.checklist[sectionId])
+              .map((sectionId) => {
+                const items = activeGame.checklist[sectionId]
+                return (
+                  <ChecklistSection
+                    key={sectionId}
+                    title={items[0]?.category || sectionId}
+                    items={items}
+                    isExpanded={expandedSections.has(sectionId)}
+                    onToggleExpand={() => toggleSection(sectionId)}
+                    onUpdateItem={(itemId, updates) => updateItem(sectionId, itemId, updates)}
+                  />
+                )
+              })}
           </div>
         </div>
       ) : (

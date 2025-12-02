@@ -10,6 +10,7 @@ interface BugsTableProps {
   onUpdateStatus: (bugId: string, status: BugStatus) => void
   onDeleteBug: (bugId: string) => void
   onEditBug: (bug: Bug) => void
+  onFiltersChange?: (filters: { gameId: string; status: string; search: string }) => void
 }
 
 const statusConfig: Record<BugStatus, { bg: string; text: string; dot: string; label: string }> = {
@@ -105,10 +106,19 @@ function StatusDropdown({ value, onChange }: { value: BugStatus; onChange: (stat
   )
 }
 
-export function BugsTable({ bugs, games, onUpdateStatus, onDeleteBug, onEditBug }: BugsTableProps) {
+export function BugsTable({ bugs, games, onUpdateStatus, onDeleteBug, onEditBug, onFiltersChange }: BugsTableProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<BugStatus | "all">("all")
   const [gameFilter, setGameFilter] = useState<string>("all")
+
+  // Notify parent of filter changes
+  useEffect(() => {
+    onFiltersChange?.({
+      gameId: gameFilter,
+      status: statusFilter,
+      search: searchQuery,
+    })
+  }, [gameFilter, statusFilter, searchQuery, onFiltersChange])
 
   const filteredBugs = bugs.filter((bug) => {
     const matchesSearch =

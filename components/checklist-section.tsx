@@ -113,7 +113,7 @@ function StatusDropdown({
         ref={buttonRef}
         type="button"
         onClick={handleToggle}
-        className={`flex items-center justify-between gap-2 text-xs font-medium px-2.5 py-1.5 rounded-md border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 min-w-[100px] hover:border-gray-300 dark:hover:border-slate-500 transition-colors`}
+        className={`flex items-center justify-between gap-2 text-xs font-medium px-2.5 py-1.5 rounded-md border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 w-[110px] hover:border-gray-300 dark:hover:border-slate-500 transition-colors`}
       >
         <span className="flex items-center gap-1.5">
           <span className={`w-2 h-2 rounded-full ${config.dot}`} />
@@ -195,8 +195,8 @@ export function ChecklistSection({ title, items, isExpanded, onToggleExpand, onU
             <thead>
               <tr className="border-b border-gray-100 dark:border-slate-700/50">
                 <th className="px-5 py-2.5 text-left text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">Item</th>
-                <th className="px-5 py-2.5 text-left text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider w-32">Evidence</th>
-                <th className="px-5 py-2.5 text-right text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider w-28">Status</th>
+                <th className="px-5 py-2.5 text-left text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider w-48">Evidence</th>
+                <th className="px-5 py-2.5 text-right text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider w-32">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-700/30">
@@ -214,14 +214,14 @@ export function ChecklistSection({ title, items, isExpanded, onToggleExpand, onU
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3">
+                    <td className="px-5 py-3 w-48">
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
                           placeholder="Add link..."
                           value={item.evidence ?? ""}
                           onChange={(e) => onUpdateItem(item.id, { evidence: e.target.value })}
-                          className="flex-1 min-w-[180px] px-2 py-1 text-xs rounded border border-transparent hover:border-gray-200 dark:hover:border-slate-600 focus:border-blue-500 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-colors"
+                          className="flex-1 px-2 py-1 text-xs rounded border border-transparent hover:border-gray-200 dark:hover:border-slate-600 focus:border-blue-500 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-colors"
                         />
                         {item.evidence && (
                           <a
@@ -236,11 +236,13 @@ export function ChecklistSection({ title, items, isExpanded, onToggleExpand, onU
                         )}
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-right">
-                      <StatusDropdown
-                        value={item.status}
-                        onChange={(status) => onUpdateItem(item.id, { status })}
-                      />
+                    <td className="px-5 py-3 w-32">
+                      <div className="flex justify-end">
+                        <StatusDropdown
+                          value={item.status}
+                          onChange={(status) => onUpdateItem(item.id, { status })}
+                        />
+                      </div>
                     </td>
                   </tr>
                 )

@@ -1,12 +1,15 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Search, Filter, AlertCircle, ExternalLink } from "lucide-react"
+import { AlertCircle, ExternalLink } from "lucide-react"
 import type { Bug, BugStatus } from "@/types/bugs"
 
 interface BugsTableViewOnlyProps {
   bugs: Bug[]
   games: { id: string; name: string }[]
+  initialGameFilter?: string
+  initialStatusFilter?: string
+  initialSearch?: string
 }
 
 const statusConfig: Record<BugStatus, { bg: string; text: string; dot: string; label: string }> = {
@@ -64,10 +67,10 @@ function StatusBadge({ status }: { status: BugStatus }) {
   )
 }
 
-export function BugsTableViewOnly({ bugs, games }: BugsTableViewOnlyProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<BugStatus | "all">("all")
-  const [gameFilter, setGameFilter] = useState<string>("all")
+export function BugsTableViewOnly({ bugs, games, initialGameFilter = "all", initialStatusFilter = "all", initialSearch = "" }: BugsTableViewOnlyProps) {
+  const [searchQuery, setSearchQuery] = useState(initialSearch)
+  const [statusFilter, setStatusFilter] = useState<BugStatus | "all">(initialStatusFilter as BugStatus | "all")
+  const [gameFilter, setGameFilter] = useState<string>(initialGameFilter)
 
   const filteredBugs = bugs.filter((bug) => {
     const matchesSearch =
@@ -114,60 +117,6 @@ export function BugsTableViewOnly({ bugs, games }: BugsTableViewOnlyProps) {
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
           <p className="text-2xl font-bold text-green-500">{doneCount}</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">Resolved</p>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Search */}
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search bugs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* Game Filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-400" />
-            <select
-              value={gameFilter}
-              onChange={(e) => setGameFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              title="Filter by game"
-              aria-label="Filter by game"
-            >
-              <option value="all">All Games</option>
-              {games.map((game) => (
-                <option key={game.id} value={game.id}>{game.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as BugStatus | "all")}
-            className="px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            title="Filter by status"
-            aria-label="Filter by status"
-          >
-            <option value="all">All Status</option>
-            <option value="open">Open</option>
-            <option value="in-progress">In Progress</option>
-            <option value="done">Done</option>
-            <option value="wont-fix">Won't Fix</option>
-          </select>
-
-          {/* Results count */}
-          <span className="text-sm text-gray-500 dark:text-gray-400 ml-auto">
-            {filteredBugs.length} of {bugs.length} bugs
-          </span>
         </div>
       </div>
 

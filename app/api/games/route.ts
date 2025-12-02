@@ -27,7 +27,7 @@ export async function GET() {
       .select("*")
       .in("game_id", gameIds)
 
-    if (itemsError) {
+    if (itemsError) { 
       console.error("Error fetching checklist items:", itemsError)
       // Return games without checklists
       return NextResponse.json(

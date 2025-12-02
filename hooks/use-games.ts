@@ -70,7 +70,7 @@ export function useGames() {
 
       if (itemsToUpdate.length > 0) {
         await updateChecklistItems(gameId, itemsToUpdate)
-        await mutate()
+        // Don't refetch to avoid reordering - optimistic update is sufficient
       }
     } catch (error) {
       console.error("Failed to update checklist:", error)
