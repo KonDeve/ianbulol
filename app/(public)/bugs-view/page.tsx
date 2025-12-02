@@ -45,18 +45,18 @@ function BugsViewContent() {
     <div className="min-h-screen">
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
-        <div className="px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
-                <Bug className="w-7 h-7 text-red-600 dark:text-red-400" />
+        <div className="px-4 sm:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="p-2 sm:p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
+                <Bug className="w-5 h-5 sm:w-7 sm:h-7 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bugs & Errors</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">View reported issues (Read-only)</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Bugs & Errors</h1>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">View reported issues (Read-only)</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-lg text-sm font-medium">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-lg text-xs sm:text-sm font-medium self-start sm:self-auto">
               View Only Mode
             </div>
           </div>
@@ -64,7 +64,7 @@ function BugsViewContent() {
       </div>
 
       {/* Content */}
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">

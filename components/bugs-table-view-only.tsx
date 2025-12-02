@@ -99,29 +99,29 @@ export function BugsTableViewOnly({ bugs, games, initialGameFilter = "all", init
   const doneCount = gameFilteredBugs.filter((b) => b.status === "done").length
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Stats Row */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Total Bugs</p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Total Bugs</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-red-500">{openCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Open</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-red-500">{openCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Open</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-yellow-500">{inProgressCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">In Progress</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-yellow-500">{inProgressCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">In Progress</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-green-500">{doneCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Resolved</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-green-500">{doneCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Resolved</p>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200 dark:border-slate-700">
@@ -177,6 +177,40 @@ export function BugsTableViewOnly({ bugs, games, initialGameFilter = "all", init
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-3">
+        {filteredBugs.length === 0 ? (
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-8 text-center">
+            <AlertCircle className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+            <p className="text-gray-500 dark:text-gray-400">No bugs found</p>
+          </div>
+        ) : (
+          filteredBugs.map((bug) => (
+            <div key={bug.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{bug.gameName}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(bug.createdAt)}</p>
+                </div>
+                <StatusBadge status={bug.status} />
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{bug.description}</p>
+              {bug.screenshotUrl && (
+                <a
+                  href={bug.screenshotUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  View Media
+                </a>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

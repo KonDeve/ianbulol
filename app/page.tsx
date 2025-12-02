@@ -123,25 +123,25 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 dark:bg-slate-900">
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
-        <div className="px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                <ClipboardCheck className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+        <div className="px-4 sm:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="p-2 sm:p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+                <ClipboardCheck className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">QA Checklist</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Track and manage game testing progress</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">QA Checklist</h1>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Track and manage game testing progress</p>
               </div>
             </div>
             {activeGame && (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Link
                   href="/bugs"
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                 >
                   <Bug className="w-4 h-4" />
-                  Bugs
+                  <span className="hidden sm:inline">Bugs</span>
                 </Link>
                 <ExportButton
                   checklist={activeGame.checklist}
@@ -162,26 +162,26 @@ export default function Home() {
           </div>
         </div>
       ) : activeGame ? (
-        <div className="p-8">
+        <div className="p-4 sm:p-8">
           {/* Game Info Card with Games Sidebar */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 mb-8 overflow-hidden">
-            <div className="flex">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 mb-6 sm:mb-8 overflow-hidden">
+            <div className="flex flex-col lg:flex-row">
               {/* Main Content */}
-              <div className="flex-1 p-6">
+              <div className="flex-1 p-4 sm:p-6">
                 {/* Game Header */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-lg flex-shrink-0">
                     {activeGame.name.charAt(0).toUpperCase()}
                   </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{activeGame.name}</h2>
-                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="min-w-0">
+                    <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white truncate">{activeGame.name}</h2>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                       <span className="flex items-center gap-1.5">
-                        <Package className="w-4 h-4" />
-                        {gamePackages[activeGame.packageId as keyof typeof gamePackages]?.name}
+                        <Package className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="truncate">{gamePackages[activeGame.packageId as keyof typeof gamePackages]?.name}</span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                         {new Date(activeGame.createdAt).toLocaleDateString()}
                       </span>
                     </div>
@@ -189,12 +189,12 @@ export default function Home() {
                 </div>
 
                 {/* Progress Section */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Overall Progress</span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">{completionPercentage}%</span>
+                    <span className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Overall Progress</span>
+                    <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">{completionPercentage}%</span>
                   </div>
-                  <div className="w-full h-2.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="w-full h-2 sm:h-2.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
                       style={{ width: `${completionPercentage}%` }}
@@ -203,32 +203,32 @@ export default function Home() {
                 </div>
 
                 {/* Status Grid */}
-                <div className="grid grid-cols-5 gap-3">
-                  <div className="bg-green-500/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-green-500">{doneCount}</p>
-                    <p className="text-xs text-green-600 dark:text-green-400">Done</p>
+                <div className="grid grid-cols-5 gap-1.5 sm:gap-3">
+                  <div className="bg-green-500/10 rounded-lg p-2 sm:p-3 text-center">
+                    <p className="text-lg sm:text-2xl font-bold text-green-500">{doneCount}</p>
+                    <p className="text-[10px] sm:text-xs text-green-600 dark:text-green-400">Done</p>
                   </div>
-                  <div className="bg-blue-500/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-blue-500">{checkingCount}</p>
-                    <p className="text-xs text-blue-600 dark:text-blue-400">Checking</p>
+                  <div className="bg-blue-500/10 rounded-lg p-2 sm:p-3 text-center">
+                    <p className="text-lg sm:text-2xl font-bold text-blue-500">{checkingCount}</p>
+                    <p className="text-[10px] sm:text-xs text-blue-600 dark:text-blue-400">Checking</p>
                   </div>
-                  <div className="bg-red-500/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-red-500">{failedCount}</p>
-                    <p className="text-xs text-red-600 dark:text-red-400">Failed</p>
+                  <div className="bg-red-500/10 rounded-lg p-2 sm:p-3 text-center">
+                    <p className="text-lg sm:text-2xl font-bold text-red-500">{failedCount}</p>
+                    <p className="text-[10px] sm:text-xs text-red-600 dark:text-red-400">Failed</p>
                   </div>
-                  <div className="bg-yellow-500/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-yellow-500">{reworkCount}</p>
-                    <p className="text-xs text-yellow-600 dark:text-yellow-400">Rework</p>
+                  <div className="bg-yellow-500/10 rounded-lg p-2 sm:p-3 text-center">
+                    <p className="text-lg sm:text-2xl font-bold text-yellow-500">{reworkCount}</p>
+                    <p className="text-[10px] sm:text-xs text-yellow-600 dark:text-yellow-400">Rework</p>
                   </div>
-                  <div className="bg-gray-500/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-gray-500">{uncheckedCount}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Pending</p>
+                  <div className="bg-gray-500/10 rounded-lg p-2 sm:p-3 text-center">
+                    <p className="text-lg sm:text-2xl font-bold text-gray-500">{uncheckedCount}</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400">Pending</p>
                   </div>
                 </div>
               </div>
 
               {/* Games Sidebar */}
-              <div className="w-72 bg-gray-50 dark:bg-slate-900/50 border-l border-gray-200 dark:border-slate-700 p-4">
+              <div className="w-full lg:w-72 bg-gray-50 dark:bg-slate-900/50 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-slate-700 p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Games</h3>
                   <button
@@ -253,7 +253,7 @@ export default function Home() {
                 </div>
 
                 {/* Games List */}
-                <div className="space-y-1 max-h-[180px] overflow-y-auto">
+                <div className="space-y-1 max-h-[150px] lg:max-h-[180px] overflow-y-auto">
                   {filteredGames.map((game) => {
                     const isActive = activeGameId === game.id
                     const gameItems = Object.values(game.checklist).flat()
@@ -301,8 +301,8 @@ export default function Home() {
           {/* Checklist Sections */}
           <div className="space-y-2">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Checklist Items</h3>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Checklist Items</h3>
+              <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 {Object.keys(activeGame.checklist).length} categories
               </span>
             </div>

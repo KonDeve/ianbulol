@@ -147,32 +147,32 @@ export function BugsTable({ bugs, games, onUpdateStatus, onDeleteBug, onEditBug,
   const doneCount = gameFilteredBugs.filter((b) => b.status === "done").length
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Stats Row */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Total Bugs</p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Total Bugs</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-red-500">{openCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Open</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-red-500">{openCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Open</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-yellow-500">{inProgressCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">In Progress</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-yellow-500">{inProgressCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">In Progress</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-          <p className="text-2xl font-bold text-green-500">{doneCount}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Resolved</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+          <p className="text-xl sm:text-2xl font-bold text-green-500">{doneCount}</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Resolved</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2 sm:gap-3">
           {/* Search */}
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-0 sm:min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -183,47 +183,50 @@ export function BugsTable({ bugs, games, onUpdateStatus, onDeleteBug, onEditBug,
             />
           </div>
 
-          {/* Game Filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-400" />
+          {/* Filter Row on Mobile */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Game Filter */}
+            <div className="flex items-center gap-2 flex-1 sm:flex-initial">
+              <Filter className="w-4 h-4 text-gray-400 hidden sm:block" />
+              <select
+                value={gameFilter}
+                onChange={(e) => setGameFilter(e.target.value)}
+                className="flex-1 sm:flex-initial px-2 sm:px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                title="Filter by game"
+                aria-label="Filter by game"
+              >
+                <option value="all">All Games</option>
+                {games.map((game) => (
+                  <option key={game.id} value={game.id}>{game.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Status Filter */}
             <select
-              value={gameFilter}
-              onChange={(e) => setGameFilter(e.target.value)}
-              className="px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              title="Filter by game"
-              aria-label="Filter by game"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as BugStatus | "all")}
+              className="flex-1 sm:flex-initial px-2 sm:px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="Filter by status"
+              aria-label="Filter by status"
             >
-              <option value="all">All Games</option>
-              {games.map((game) => (
-                <option key={game.id} value={game.id}>{game.name}</option>
-              ))}
+              <option value="all">All Status</option>
+              <option value="open">Open</option>
+              <option value="in-progress">In Progress</option>
+              <option value="done">Done</option>
+              <option value="wont-fix">Won't Fix</option>
             </select>
           </div>
 
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as BugStatus | "all")}
-            className="px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            title="Filter by status"
-            aria-label="Filter by status"
-          >
-            <option value="all">All Status</option>
-            <option value="open">Open</option>
-            <option value="in-progress">In Progress</option>
-            <option value="done">Done</option>
-            <option value="wont-fix">Won't Fix</option>
-          </select>
-
           {/* Results count */}
-          <span className="text-sm text-gray-500 dark:text-gray-400 ml-auto">
+          <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 sm:ml-auto text-center sm:text-right">
             {filteredBugs.length} of {bugs.length} bugs
           </span>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+      {/* Table - Desktop */}
+      <div className="hidden md:block bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200 dark:border-slate-700">
@@ -303,6 +306,63 @@ export function BugsTable({ bugs, games, onUpdateStatus, onDeleteBug, onEditBug,
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-3">
+        {filteredBugs.length === 0 ? (
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-8 text-center">
+            <AlertCircle className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+            <p className="text-gray-500 dark:text-gray-400">No bugs found</p>
+          </div>
+        ) : (
+          filteredBugs.map((bug) => (
+            <div key={bug.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{bug.gameName}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(bug.createdAt)}</p>
+                </div>
+                <StatusDropdown
+                  value={bug.status}
+                  onChange={(status) => onUpdateStatus(bug.id, status)}
+                />
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{bug.description}</p>
+              <div className="flex items-center justify-between">
+                {bug.screenshotUrl ? (
+                  <a
+                    href={bug.screenshotUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    View Media
+                  </a>
+                ) : (
+                  <span className="text-sm text-gray-400">No media</span>
+                )}
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => onEditBug(bug)}
+                    className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                    title="Edit bug"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => onDeleteBug(bug.id)}
+                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                    title="Delete bug"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

@@ -46,13 +46,13 @@ export function ShareModal({ isOpen, onClose, shareUrl, filters }: ShareModalPro
 
   return (
     <div 
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${
+      className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-200 ${
         isAnimating ? "bg-black/50 backdrop-blur-sm" : "bg-transparent"
       }`}
       onClick={handleClose}
     >
       <div
-        className={`bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 ease-out ${
+        className={`bg-white dark:bg-slate-800 rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-md transform transition-all duration-300 ease-out ${
           isAnimating 
             ? "scale-100 opacity-100 translate-y-0" 
             : "scale-95 opacity-0 translate-y-4"
@@ -60,14 +60,14 @@ export function ShareModal({ isOpen, onClose, shareUrl, filters }: ShareModalPro
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-slate-700">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-slate-700">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
               <Link2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Share Bugs View</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Copy the link to share</p>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Share Bugs View</h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Copy the link to share</p>
             </div>
           </div>
           <button
@@ -79,7 +79,7 @@ export function ShareModal({ isOpen, onClose, shareUrl, filters }: ShareModalPro
         </div>
 
         {/* Content */}
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4">
           {/* Filters being shared */}
           {hasFilters && (
             <div className="space-y-3">
@@ -89,18 +89,18 @@ export function ShareModal({ isOpen, onClose, shareUrl, filters }: ShareModalPro
               </div>
               <div className="flex flex-wrap gap-2">
                 {filters.gameName && (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium animate-fadeIn">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-xs sm:text-sm font-medium animate-fadeIn">
                     <Gamepad2 className="w-3.5 h-3.5" />
                     {filters.gameName}
                   </div>
                 )}
                 {filters.status && (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-medium animate-fadeIn animation-delay-100">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg text-xs sm:text-sm font-medium animate-fadeIn animation-delay-100">
                     Status: {filters.status}
                   </div>
                 )}
                 {filters.search && (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg text-sm font-medium animate-fadeIn animation-delay-200">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg text-xs sm:text-sm font-medium animate-fadeIn animation-delay-200">
                     Search: "{filters.search}"
                   </div>
                 )}
@@ -109,23 +109,23 @@ export function ShareModal({ isOpen, onClose, shareUrl, filters }: ShareModalPro
           )}
 
           {!hasFilters && (
-            <div className="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3">
+            <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3">
               Sharing all bugs (no filters applied)
             </div>
           )}
 
           {/* URL Preview */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
               Shareable Link
             </label>
-            <div className="flex gap-2">
-              <div className="flex-1 px-3 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg text-sm text-gray-600 dark:text-gray-300 truncate font-mono">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex-1 px-3 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate font-mono">
                 {shareUrl}
               </div>
               <button
                 onClick={handleCopy}
-                className={`px-4 py-2.5 rounded-lg font-medium text-sm flex items-center gap-2 transition-all duration-200 ${
+                className={`px-4 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
                   copied
                     ? "bg-green-500 text-white"
                     : "bg-blue-600 text-white hover:bg-blue-700"
@@ -148,7 +148,7 @@ export function ShareModal({ isOpen, onClose, shareUrl, filters }: ShareModalPro
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-4 bg-gray-50 dark:bg-slate-700/50 rounded-b-2xl border-t border-gray-200 dark:border-slate-700">
+        <div className="px-4 sm:px-5 py-4 bg-gray-50 dark:bg-slate-700/50 rounded-b-2xl border-t border-gray-200 dark:border-slate-700">
           <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
             Recipients will see a read-only view of the bugs
           </p>
